@@ -23,7 +23,7 @@ class GlarbokBot(commands.Bot):
         "lnrBok lnrBok lnrBok lnrShrok"
     )
 
-    WHERE_BOK_AT_MSG = "lnrBok lnrShrok it's {time}, do you know where Glarbok is? lnrShrok lnrBok"
+    WHERE_BOK_AT_MSG = "lnrBok lnrShrok it's {time}, where Glarbok at? lnrShrok lnrBok"
 
     def __init__(self, streak_target):
         super().__init__(
