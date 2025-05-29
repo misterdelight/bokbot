@@ -1,6 +1,9 @@
 import sys
 import os
 from twitchio.ext import commands
+import asyncio
+import random
+import datetime
 
 class GlarbokBot(commands.Bot):
 
@@ -20,6 +23,8 @@ class GlarbokBot(commands.Bot):
         "lnrBok lnrBok lnrBok lnrShrok"
     )
 
+    WHERE_BOK_AT_MSG = "lnrBok lnrShrok it's {time}, do you know where Glarbok is? lnrShrok lnrBok"
+
     def __init__(self, streak_target):
         super().__init__(
             token=os.getenv("TWITCH_TOKEN"),
@@ -32,13 +37,22 @@ class GlarbokBot(commands.Bot):
     async def event_ready(self):
         print(f'Logged in as | {self.nick}')
         print(f'Streak target set to {self.streak_target}.')
+        self.loop.create_task(self.periodic_glarbok_check())
+
+    async def periodic_glarbok_check(self):
+        while True:
+            wait_time = random.randint(1, 3 * 60 * 60)  # seconds
+            await asyncio.sleep(wait_time)
+            current_time = datetime.datetime.now().strftime("%-I:%M %p").lower()
+            message = self.WHERE_BOK_AT_MSG.format(time=current_time)
+            await self.connected_channels[0].send(message)
 
     async def event_message(self, message):
         if message.echo:
             return
 
         content = message.content.lower()
-        if "bok nation" in content:
+        if "bok nation" in content or "boknation" in content:
             await message.channel.send(self.BOK_NATION_MSG)
             return
 
